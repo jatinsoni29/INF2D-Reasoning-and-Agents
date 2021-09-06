@@ -1,0 +1,153 @@
+Part 1: Modelling the domain
+
+Task 1.1: Describing the world state
+
+Chamber(c)
+
+Chamber(A)
+Chamber(B)
+Chamber(C)
+Chamber(D)
+Chamber(E)
+Chamber(F)
+Chamber(L)
+
+ConnectedChambers(x, y)
+
+ConnectedChambers(L, A)
+ConnectedChambers(A, B)
+ConnectedChambers(B, C)
+ConnectedChambers(C, D)
+ConnectedChambers(B, E)
+ConnectedChambers(E, F)
+
+ConnectedChambers(A, L)
+ConnectedChambers(B, A)
+ConnectedChambers(C, B)
+ConnectedChambers(D, C)
+ConnectedChambers(E, B)
+ConnectedChambers(F, E)
+
+
+BoTheseus(b)
+Minobot(m)
+Sword(s)
+
+BoTheseusAt(c)
+MinobotAt(c)
+SwordAt(c)
+
+DefeatedMinobot(d)
+HoldingSword(s)
+
+Init(
+	BoTheseus(b) ∧ Chamber(E) ∧ Minobot(m) ∧ Chamber(L) ∧ Sword(s) ∧ Chamber(D) ∧ 
+	BoTheseusAt(E) ∧ MinobotAt(L) ∧ SwordAt(D) ∧
+	¬DefeatedMinobot(m) ∧ ¬HoldingSword(s)
+)
+
+Goal(
+	DefeatedMinobot(m) ∧ BoTheseusAt(E)
+)
+
+
+
+Task 1.2: Actions
+
+Action(PickUpSword(b, s, at),
+
+	PRECONDITION:
+		      BoTheseus(b) ∧ Sword(s) ∧ ¬HoldingSword(s) ∧ SwordAt(at) ∧ BoTheseusAt(at)
+
+	EFFECT: HoldingSword(s) ∧ ¬SwordAt(at)
+)
+
+
+Action(Slay(b, m, s, at),
+	
+	PRECONDITION: 
+		      BoTheseus(b) ∧ Sword(s) ∧ HoldingSword(s) ∧ SwordAt(at) ∧ BoTheseusAt(at) ∧ MinobotAt(at) ∧ ¬DefeatedMinobot(m)
+
+	EFFECT: DefeatedMinobot(m)
+
+)
+
+Action(Move(b, from, to),
+	
+	PRECONDITION:
+		      BoTheseus(b) ∧ Chamber(from) ∧ Chamber(to) ∧ BoTheseusAt(from) ∧ ¬(from = to) ∧ ConnectedChambers(from, to)
+
+	EFFECT: ¬BoTheseusAt(from) ∧ BoTheseusAt(to)
+
+)
+
+Task 1.3:
+
+The initial state and goal as mentioned in the problem for task 1.3 would be:
+
+Init(
+	BoTheseus(b) ∧ Chamber(E) ∧ Minobot(m) ∧ Chamber(L) ∧ Sword(s) ∧ Chamber(D) ∧ 
+	BoTheseusAt(B) ∧ MinobotAt(L) ∧ SwordAt(A) ∧
+	¬DefeatedMinobot(m) ∧ ¬HoldingSword(s)
+)
+
+Goal(
+	DefeatedMinobot(m)
+)
+
+The workings of the algorithm would then look like:
+
+
+# Stage 0
+## Current state:
+	- DefeatedMinobot(m)
+	- BoTheseusAt(L)
+	- MinobotAt(L)
+
+# Stage 1
+## Goal state:
+	- ¬DefeatedMinobot(m)
+	- HoldingSword(s)
+## Actions available:
+	- Slay(b, m, s, L) 
+## Executed:
+	- Slay(b, m, s, L)
+
+# Stage 2
+## Goal state: 
+	- BoTheseusAt(A)
+## Actions available:
+	- Move(b, A, L) # this is the only action available as there are no other moves that can be made which will be valid.
+## Executed:
+	- Move(b, A, L)
+
+# Stage 3
+## Goal state:
+	- ¬HoldingSword(s)
+## Actions available:
+	- PickUpSword(b, s, A)
+## Executed:
+	- PickUpSword(b, s, A)
+
+# Stage 4
+## Goal state:
+	- BoTheseusAt(B)
+## Actions available:
+	- Move(b, B, A) # this is the only action available as there are no other moves that can be made which will be valid.
+## Executed:
+	- Move(b, B, A)
+
+Now the algorithm terminates as it satisfies with the inital state.
+
+Final plan:
+
+- Move(b, B, A)
+- PickUpSword(b, s, A)
+- Move(b, A, L)
+- Slay(b, m, s, L)
+
+
+
+
+
+
